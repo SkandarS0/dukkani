@@ -1,5 +1,5 @@
 import z from "zod";
-import prisma from "@my-better-t-app/db";
+import prisma from "@dukkani/db";
 import { publicProcedure } from "../index";
 
 export const todoRouter = {

@@ -1,6 +1,6 @@
 # Better-T-Stack Project Rules
 
-This is a my-better-t-app project created with Better-T-Stack CLI.
+This is a dukkani project created with Better-T-Stack CLI.
 
 ## Project Structure
 

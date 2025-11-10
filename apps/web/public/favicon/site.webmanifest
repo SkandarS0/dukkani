@@ -1,6 +1,6 @@
 {
-	"name": "my-better-t-app",
-	"short_name": "my-better-t-app",
+	"name": "Dukkani",
+	"short_name": "Dukkani",
 	"icons": [
 		{
 			"src": "/web-app-manifest-192x192.png",

@@ -1,4 +1,4 @@
-# my-better-t-app
+# dukkani
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Self, ORPC, and more.
 
@@ -45,15 +45,10 @@ pnpm run dev
 Open [http://localhost:3001](http://localhost:3001) in your browser to see your fullstack application.
 
 
-
-
-
-
-
 ## Project Structure
 
 ```
-my-better-t-app/
+dukkani/
 ├── apps/
 │   └── web/         # Fullstack application (Next.js)
 ├── packages/

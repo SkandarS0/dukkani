@@ -1,5 +1,5 @@
 {
-  "name": "@my-better-t-app/auth",
+  "name": "@dukkani/auth",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "tsdown": "catalog:",
-    "@my-better-t-app/config": "workspace:*"
+    "@dukkani/config": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -27,6 +27,6 @@
     "@polar-sh/sdk": "^0.34.16",
     "dotenv": "catalog:",
     "zod": "catalog:",
-    "@my-better-t-app/db": "workspace:*"
+    "@dukkani/db": "workspace:*"
   }
 }

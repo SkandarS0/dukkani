@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Dashboard from "./dashboard";
 import { headers } from "next/headers";
-import { auth } from "@my-better-t-app/auth";
+import { auth } from "@dukkani/auth";
 import { authClient } from "@/lib/auth-client";
 
 export default async function DashboardPage() {
