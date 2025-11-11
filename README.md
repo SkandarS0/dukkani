@@ -23,12 +23,38 @@ First, install the dependencies:
 ```bash
 pnpm install
 ```
+
+## Environment Setup
+
+This project uses [T3 Env](https://env.t3.gg) for type-safe environment variable management.
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Update the `.env` file at the root of the project with your configuration:
+
+   **Base/Shared Variables:**
+   - `DATABASE_URL`: Your PostgreSQL connection string (required) - Used by db, auth, and all apps
+
+   **Auth Package Variables:**
+   - `CORS_ORIGIN`: CORS origin URL (optional) - Used by auth package
+   - `POLAR_ACCESS_TOKEN`: Polar payment access token (optional) - Used by auth package
+   - `POLAR_SUCCESS_URL`: Polar payment success URL (optional) - Used by auth package
+
+All environment variables are validated at runtime and provide type-safe access throughout the monorepo. Each package only includes the environment variables it needs:
+- `@dukkani/env`: Base env with `DATABASE_URL` (shared by all)
+- `@dukkani/auth/env`: Auth-specific env vars (extends base)
+- `@dukkani/db/env`: Database env (extends base, lightweight)
+- `apps/web/env`: Next.js app env (extends base + auth)
+
 ## Database Setup
 
 This project uses PostgreSQL with Prisma.
 
 1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/web/.env` file with your PostgreSQL connection details.
+2. Update your root `.env` file with your PostgreSQL connection details in `DATABASE_URL`.
 
 3. Generate the Prisma client and push the schema:
 ```bash

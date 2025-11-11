@@ -33,6 +33,7 @@
     "@polar-sh/better-auth": "catalog:",
     "@dukkani/api": "workspace:*",
     "@dukkani/auth": "workspace:*",
+    "@dukkani/env": "workspace:*",
     "@dukkani/ui": "workspace:*"
   },
   "devDependencies": {
@@ -43,6 +44,7 @@
     "tailwindcss": "^4.1.10",
     "typescript": "^5",
     "@tanstack/react-query-devtools": "^5.85.5",
-    "@dukkani/config": "workspace:*"
+    "@dukkani/config": "workspace:*",
+    "@t3-oss/env-nextjs": "catalog:"
   }
 }
