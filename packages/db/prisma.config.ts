@@ -1,10 +1,16 @@
 import path from "node:path";
 import type { PrismaConfig } from "prisma";
-import "./src/env";
+import dotenv from "dotenv";
 
-export default {
+dotenv.config({
+	path: path.resolve(__dirname, "../../.env"),
+});
+
+const config: PrismaConfig = {
 	schema: path.join("prisma", "schema"),
 	migrations: {
 		path: path.join("prisma", "migrations"),
 	},
-} satisfies PrismaConfig;
+};
+
+export default config;
