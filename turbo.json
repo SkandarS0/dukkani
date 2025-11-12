@@ -7,7 +7,6 @@
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"],
 			"env": ["DATABASE_URL"]
-
 		},
 		"lint": {
 			"dependsOn": ["^lint"]
@@ -32,8 +31,7 @@
 			"persistent": true
 		},
 		"db:generate": {
-			"cache": false,
-			"persistent": true
+			"cache": false
 		},
 		"db:seed": {
 			"cache": false,
