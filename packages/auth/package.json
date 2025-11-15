@@ -19,18 +19,18 @@
 		"build": "tsdown"
 	},
 	"devDependencies": {
-		"tsdown": "catalog:",
-		"@dukkani/config": "workspace:*"
+		"@dukkani/config": "workspace:*",
+		"tsdown": "catalog:"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
 	},
 	"dependencies": {
+		"@dukkani/db": "workspace:*",
+		"@dukkani/env": "workspace:*",
+		"@t3-oss/env-core": "catalog:",
 		"better-auth": "catalog:",
 		"dotenv": "catalog:",
-		"zod": "catalog:",
-		"@t3-oss/env-core": "catalog:",
-		"@dukkani/db": "workspace:*",
-		"@dukkani/env": "workspace:*"
+		"zod": "catalog:"
 	}
 }
