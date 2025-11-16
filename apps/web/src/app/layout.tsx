@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@dukkani/ui/styles/globals.css";
 import Header from "@/components/header";
-import Providers from "@/components/providers";
+import { ThemeProvider } from "@dukkani/ui/components/theme-provider";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Dukkani",
-	description: "Dukkani",
+	title: "Dukkani - Business Management Solution",
+	description: "Your all-in-one business management solution",
 };
 
 export default function RootLayout({
@@ -29,12 +29,17 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<Providers>
-					<div className="grid h-svh grid-rows-[auto_1fr]">
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<div className="grid min-h-svh grid-rows-[auto_1fr]">
 						<Header />
-						{children}
+						<main>{children}</main>
 					</div>
-				</Providers>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
