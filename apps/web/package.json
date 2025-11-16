@@ -13,6 +13,7 @@
 		"@dukkani/orpc": "workspace:*",
 		"@dukkani/ui": "workspace:*",
 		"@orpc/client": "catalog:",
+		"@prisma/client": "catalog:",
 		"@orpc/tanstack-query": "^1.11.2",
 		"@tanstack/react-form": "^1.25.0",
 		"@tanstack/react-query": "^5.90.9",

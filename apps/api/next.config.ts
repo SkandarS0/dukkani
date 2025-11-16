@@ -1,17 +1,8 @@
 import type { NextConfig } from "next";
+import "./src/env";
 
 const nextConfig: NextConfig = {
-	// Disable typed routes for API app since it uses catch-all routes
-	// typedRoutes: true,
-	redirects: async () => {
-		return [
-			{
-				source: "/",
-				destination: "/api",
-				permanent: false,
-			},
-		];
-	},
+	typedRoutes: true,
 };
 
 export default nextConfig;
