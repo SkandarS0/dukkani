@@ -5,7 +5,7 @@ import type { ProductSeeder } from "./product.seeder";
 import type { CustomerSeeder } from "./customer.seeder";
 import { OrderStatus } from "../../../prisma/generated/client";
 import { Prisma } from "../../../prisma/generated/client";
-import { generateOrderId } from "../../utils/generate-id";
+import { generateOrderId } from "@dukkani/common/utils";
 
 /**
  * Seeder for Order model
@@ -125,7 +125,9 @@ export class OrderSeeder extends BaseSeeder {
 			const storeCustomers = customersByStoreSlug.get(storeSlug) || [];
 
 			if (storeProducts.length === 0) {
-				this.log(`⚠️  No products found for store "${store.name}" (${storeSlug}). Skipping orders for this store.`);
+				this.log(
+					`⚠️  No products found for store "${store.name}" (${storeSlug}). Skipping orders for this store.`,
+				);
 				continue;
 			}
 
