@@ -50,7 +50,7 @@
 	"devDependencies": {
 		"@dukkani/config": "workspace:*",
 		"@types/bcryptjs": "^2.4.6",
-		"prisma": "^6.19.0",
+		"prisma": "catalog:",
 		"tsdown": "catalog:",
 		"tsx": "catalog:"
 	}
