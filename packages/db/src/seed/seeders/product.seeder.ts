@@ -1,7 +1,7 @@
 import { BaseSeeder } from "../base";
-import type { PrismaClient } from "@/prisma/generated/client";
+import type { PrismaClient } from "../../../prisma/generated/client";
 import type { StoreSeeder } from "./store.seeder";
-import { Prisma } from "@/prisma/generated/client";
+import { Prisma } from "../../../prisma/generated/client";
 import { generateProductId } from "@/utils/generate-id";
 
 /**

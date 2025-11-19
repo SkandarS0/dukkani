@@ -1,0 +1,12 @@
+import { z } from "zod";
+import { healthStatusSchema } from "./enums";
+
+export const healthSimpleOutputSchema = z.object({
+	id: z.string(),
+	status: healthStatusSchema,
+	duration: z.number().int(),
+	startTime: z.date(),
+	endTime: z.date(),
+});
+
+export type HealthSimpleOutput = z.infer<typeof healthSimpleOutputSchema>;

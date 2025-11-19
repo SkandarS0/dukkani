@@ -11,3 +11,4 @@ export * as teamMember from "./team-member";
 export * as salesMetric from "./sales-metric";
 export * as whatsappMessage from "./whatsapp-message";
 export * as utils from "./utils";
+export * as health from "./health";

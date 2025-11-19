@@ -48,3 +48,10 @@ enum StoreTheme {
   MODERN
   CLASSIC
 }
+
+enum HealthStatus {
+  HEALTHY
+  DEGRADED
+  UNHEALTHY
+  UNKNOWN
+}

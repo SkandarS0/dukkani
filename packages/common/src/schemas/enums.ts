@@ -6,6 +6,7 @@ import {
 	StorePlanType,
 	StoreCategory,
 	StoreTheme,
+	HealthStatus,
 } from "@dukkani/db/prisma/generated/enums";
 
 /**
@@ -65,3 +66,12 @@ export const storeThemeSchema = z.nativeEnum(StoreTheme);
 export const storeThemeEnum = storeThemeSchema.enum;
 export const LIST_STORE_THEMES = Object.values(StoreTheme);
 export type StoreThemeInfer = z.infer<typeof storeThemeSchema>;
+
+/**
+ * Health Status Enum
+ */
+export { HealthStatus };
+export const healthStatusSchema = z.nativeEnum(HealthStatus);
+export const healthStatusEnum = healthStatusSchema.enum;
+export const LIST_HEALTH_STATUSES = Object.values(HealthStatus);
+export type HealthStatusInfer = z.infer<typeof healthStatusSchema>;

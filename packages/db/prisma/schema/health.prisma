@@ -1,0 +1,17 @@
+/**
+ * Represents the health of the database.
+ * **Key Fields:**
+ * - `id`: Unique identifier (CUID)
+ * - `status`: Current health status (HEALTHY, DEGRADED, UNHEALTHY)
+ */
+model Health {
+  id String @id @default(cuid())
+
+  duration Int          @map("duration")
+  status   HealthStatus @default(HEALTHY)
+
+  startTime DateTime @map("starttime")
+  endTime   DateTime @map("endtime")
+
+  @@map("health")
+}
