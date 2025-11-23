@@ -41,11 +41,27 @@ function getCorsHeaders(origin: string | null): HeadersInit {
 	const isDevelopment = apiEnv.NEXT_PUBLIC_NODE_ENV === "local";
 	const isLocalhost = origin?.startsWith("http://localhost:") ?? false;
 
-	// Allow the origin if it's from localhost in development, or use the configured origin
-	const allowedOrigin =
-		isDevelopment && isLocalhost && origin
-			? origin
-			: apiEnv.NEXT_PUBLIC_CORS_ORIGIN;
+	// Build list of allowed origins
+	const allowedOrigins: string[] = [apiEnv.NEXT_PUBLIC_CORS_ORIGIN];
+
+	// Add dashboard URL if available (for production)
+	const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
+	if (dashboardUrl) {
+		allowedOrigins.push(dashboardUrl);
+	}
+
+	// Determine the allowed origin
+	let allowedOrigin: string;
+	if (isDevelopment && isLocalhost && origin) {
+		// In development, allow any localhost origin
+		allowedOrigin = origin;
+	} else if (origin && allowedOrigins.includes(origin)) {
+		// If the origin matches one of the allowed origins, use it
+		allowedOrigin = origin;
+	} else {
+		// Fallback to the configured CORS origin
+		allowedOrigin = apiEnv.NEXT_PUBLIC_CORS_ORIGIN;
+	}
 
 	return {
 		"Access-Control-Allow-Origin": allowedOrigin,
