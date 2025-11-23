@@ -1,10 +1,15 @@
-import prisma from "@dukkani/db";
-import { publicProcedure } from "../index";
-import {
-	healthSimpleOutputSchema,
-	type HealthSimpleOutput,
-} from "@dukkani/common/schemas/health/output";
 import { HealthStatus } from "@dukkani/common/schemas/enums";
+import {
+	type HealthSimpleOutput,
+	healthSimpleOutputSchema,
+} from "@dukkani/common/schemas/health/output";
+import { database } from "@dukkani/db";
+import { publicProcedure } from "../index";
+
+const HEALTH_CHECK_CONFIG = {
+	DEGRADED_THRESHOLD_MS: 1000,
+} as const;
+
 export const healthRouter = {
 	/**
 	 * Health check endpoint with database connectivity test
@@ -18,7 +23,7 @@ export const healthRouter = {
 		// Test database connectivity
 		try {
 			const dbStartTime = Date.now();
-			health = await prisma.health.create({
+			health = await database.health.create({
 				data: {
 					status: HealthStatus.UNKNOWN,
 					duration: 0,
@@ -29,20 +34,22 @@ export const healthRouter = {
 			const dbEndTime = Date.now();
 			dbConnected = true;
 			dbLatency = dbEndTime - dbStartTime;
-		} catch (error) {
+		} catch {
 			dbConnected = false;
 		}
 
 		// Determine overall health status
-		const status: HealthStatus = dbConnected
-			? HealthStatus.HEALTHY
-			: HealthStatus.UNHEALTHY;
+		const status: HealthStatus = !dbConnected
+			? HealthStatus.UNHEALTHY
+			: dbLatency && dbLatency > HEALTH_CHECK_CONFIG.DEGRADED_THRESHOLD_MS
+				? HealthStatus.DEGRADED
+				: HealthStatus.HEALTHY;
 
 		const endTime = new Date();
 
 		// Update health record with final status and metrics
 		if (health) {
-			health = await prisma.health.update({
+			health = await database.health.update({
 				where: { id: health.id },
 				data: {
 					status,
@@ -52,7 +59,7 @@ export const healthRouter = {
 			});
 		} else {
 			// If creation failed, create a new record with unhealthy status
-			health = await prisma.health.create({
+			health = await database.health.create({
 				data: {
 					status,
 					duration: 0,
