@@ -24,9 +24,11 @@ import {
 	ChevronUp,
 	Circle,
 	CompassIcon,
+	Copy,
 	GripVertical,
 	HouseIcon,
 	Info,
+	Key,
 	LandmarkIcon,
 	LayoutDashboard,
 	Loader2,
@@ -49,7 +51,7 @@ import {
 	Users,
 	X,
 } from "lucide-react";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
+import { FaApple, FaFacebook, FaGoogle, FaTelegram } from "react-icons/fa";
 
 export type Icon = LucideIcon;
 
@@ -91,5 +93,8 @@ export const Icons = {
 	google: FaGoogle,
 	apple: FaApple,
 	facebook: FaFacebook,
+	telegram: FaTelegram,
 	logo: CompassIcon,
+	key: Key,
+	copy: Copy,
 } as const;

@@ -2,5 +2,17 @@
 	"dashboard": {
 		"title": "Tableau de bord",
 		"description": "salut"
+	},
+	"settings": {
+		"telegram": {
+			"title": "Notifications Telegram",
+			"description": "Liez votre compte Telegram pour recevoir des notifications de commande instantanées",
+			"linked": "Compte Telegram lié le",
+			"recently": "récemment",
+			"linkButton": "Lier via Telegram",
+			"option1": "Option 1 : Cliquez sur le lien ci-dessous",
+			"option2": "Option 2 : Scannez le code QR",
+			"expires": "Ce lien expire dans 10 minutes. Si Telegram n'est pas installé, vous pouvez l'installer depuis"
+		}
 	}
 }

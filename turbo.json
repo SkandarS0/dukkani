@@ -18,7 +18,10 @@
 				"STORAGE_MAX_FILE_SIZE",
 				"STORAGE_ALLOWED_MIME_TYPES",
 				"APPLE_CLIENT_ID",
-				"APPLE_CLIENT_SECRET"
+				"APPLE_CLIENT_SECRET",
+				"TELEGRAM_BOT_NAME",
+				"TELEGRAM_API_TOKEN",
+				"TELEGRAM_WEBHOOK_SECRET"
 			]
 		},
 		"lint": {
@@ -29,7 +32,8 @@
 		},
 		"dev": {
 			"cache": false,
-			"persistent": true
+			"persistent": true,
+			"outputLogs": "full"
 		},
 		"db:push": {
 			"cache": false
