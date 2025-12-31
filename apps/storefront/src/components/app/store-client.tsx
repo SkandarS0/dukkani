@@ -1,9 +1,9 @@
 "use client";
 
-import type { StoreIncludeOutput } from "@dukkani/common/schemas/store/output";
+import type { StorePublicOutput } from "@dukkani/common/schemas/store/output";
 import { useTranslations } from "next-intl";
 
-export function StoreClient({ store }: { store: StoreIncludeOutput }) {
+export function StoreClient({ store }: { store: StorePublicOutput }) {
 	const t = useTranslations("storefront.store");
 
 	return (
@@ -20,9 +20,16 @@ export function StoreClient({ store }: { store: StoreIncludeOutput }) {
 			{store.owner && (
 				<div className="mb-6 rounded-lg border p-4">
 					<h2 className="font-semibold text-xl">{t("owner.title")}</h2>
-					<p className="text-muted-foreground">
-						{store.owner.name || store.owner.email}
-					</p>
+					{store.owner.name && (
+						<p className="text-muted-foreground">{store.owner.name}</p>
+					)}
+					{store.owner.image && (
+						<img
+							src={store.owner.image}
+							alt={store.owner.name || "Owner"}
+							className="mt-2 h-16 w-16 rounded-full"
+						/>
+					)}
 				</div>
 			)}
 
@@ -45,6 +52,14 @@ export function StoreClient({ store }: { store: StoreIncludeOutput }) {
 										TND
 									</p>
 								)}
+								{product.imagesUrls.map((imageUrl) => (
+									<img
+										key={imageUrl}
+										src={imageUrl}
+										alt={product.name}
+										className="h-32 w-full rounded object-cover"
+									/>
+								))}
 							</div>
 						))}
 					</div>

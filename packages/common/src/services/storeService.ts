@@ -1,11 +1,12 @@
 import { database } from "@dukkani/db";
 import { StorePlanType } from "@dukkani/db/prisma/generated/enums";
+import { ProductQuery } from "../entities/product/query";
 import { StoreEntity } from "../entities/store/entity";
 import { StoreQuery } from "../entities/store/query";
 import type { CreateStoreOnboardingInput } from "../schemas/store/input";
 import type {
 	StoreIncludeOutput,
-	StoreSafeOutput,
+	StorePublicOutput,
 	StoreSimpleOutput,
 } from "../schemas/store/output";
 import { getOrderLimitForPlan } from "../schemas/store-plan/constants";
@@ -143,19 +144,65 @@ export class StoreService {
 	}
 
 	/**
-	 * Get store by slug (public - no ownership verification)
-	 * Used for public storefronts
+	 * Get store by slug (public - for storefronts)
+	 * Returns public data with owner (limited) and products (published only, paginated)
 	 */
-	static async getStoreBySlugPublic(slug: string): Promise<StoreSafeOutput> {
+	static async getStoreBySlugPublic(
+		slug: string,
+		options?: {
+			productPage?: number;
+			productLimit?: number;
+		},
+	): Promise<StorePublicOutput> {
+		const productPage = options?.productPage ?? 1;
+		const productLimit = options?.productLimit ?? 20;
+
+		// First, get the store to find its ID
 		const store = await database.store.findUnique({
 			where: { slug },
-			include: StoreQuery.getClientSafeInclude(),
+			select: { id: true },
 		});
 
 		if (!store) {
 			throw new Error("Store not found");
 		}
 
-		return StoreEntity.getSafeRo(store);
+		// Get total count of published products
+		const totalProducts = await database.product.count({
+			where: {
+				storeId: store.id,
+				...ProductQuery.getPublishableWhere(),
+			},
+		});
+
+		// Get store with paginated products
+		const storeWithProducts = await database.store.findUnique({
+			where: { slug },
+			include: StoreQuery.getPublicInclude({
+				productPage,
+				productLimit,
+			}),
+		});
+
+		if (!storeWithProducts) {
+			throw new Error("Store not found");
+		}
+
+		const result = StoreEntity.getPublicRo(storeWithProducts);
+
+		// Add pagination metadata
+		const productSkip = (productPage - 1) * productLimit;
+		const hasMoreProducts =
+			productSkip + (storeWithProducts.products?.length ?? 0) < totalProducts;
+
+		return {
+			...result,
+			productsPagination: {
+				total: totalProducts,
+				hasMore: hasMoreProducts,
+				page: productPage,
+				limit: productLimit,
+			},
+		};
 	}
 }

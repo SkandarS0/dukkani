@@ -14,9 +14,22 @@ export type ProductClientSafeDbData = Prisma.ProductGetPayload<{
 	include: ReturnType<typeof ProductQuery.getClientSafeInclude>;
 }>;
 
+export type ProductPublicDbData = Prisma.ProductGetPayload<{
+	include: ReturnType<typeof ProductQuery.getPublicInclude>;
+}>;
+
 export class ProductQuery {
 	static getSimpleInclude() {
 		return {} satisfies Prisma.ProductInclude;
+	}
+
+	static getPublicInclude() {
+		return {
+			...ProductQuery.getSimpleInclude(),
+			images: {
+				select: ImageQuery.getPublicSelect(),
+			},
+		} satisfies Prisma.ProductInclude;
 	}
 
 	static getInclude() {
@@ -79,6 +92,22 @@ export class ProductQuery {
 		}
 
 		return where;
+	}
+
+	/**
+	 * Get where clause for products that should be visible publicly
+	 * Centralizes logic for determining publishable products
+	 * Currently: published = true
+	 * Future: Can extend to include isDeleted = false, archived = false, etc.
+	 */
+	static getPublishableWhere(): Prisma.ProductWhereInput {
+		return {
+			published: true,
+			// Future: Add additional conditions here as needed
+			// isDeleted: false,
+			// archived: false,
+			// etc.
+		};
 	}
 
 	/**

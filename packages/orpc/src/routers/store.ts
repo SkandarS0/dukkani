@@ -1,12 +1,13 @@
 import { UserOnboardingStep } from "@dukkani/common/schemas/enums";
 import {
 	createStoreOnboardingInputSchema,
+	getStoreBySlugPublicInputSchema,
 	getStoreInputSchema,
 	listStoresInputSchema,
 } from "@dukkani/common/schemas/store/input";
 import {
 	storeIncludeOutputSchema,
-	storeSafeOutputSchema,
+	storePublicOutputSchema,
 	storeSimpleOutputSchema,
 } from "@dukkani/common/schemas/store/output";
 import { StoreService } from "@dukkani/common/services";
@@ -14,6 +15,7 @@ import { database } from "@dukkani/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
+import { rateLimitPublicSafe } from "../middleware/rate-limit";
 
 export const storeRouter = {
 	/**
@@ -88,12 +90,13 @@ export const storeRouter = {
 
 	/**
 	 * Get store by slug (public - for storefronts)
-	 * No authentication required, but rate limited
-	 * @todo: Do we really need a rate limit for this?
+	 * No authentication required, uses storefront rate limiting (100/min)
+	 * Supports pagination for products
 	 */
 	getBySlugPublic: publicProcedure
-		.input(z.object({ slug: z.string() }))
-		.output(storeSafeOutputSchema)
+		.use(rateLimitPublicSafe)
+		.input(getStoreBySlugPublicInputSchema)
+		.output(storePublicOutputSchema)
 		.handler(async ({ input }) => {
 			if (!input.slug) {
 				throw new ORPCError("BAD_REQUEST", {
@@ -101,6 +104,9 @@ export const storeRouter = {
 				});
 			}
 
-			return await StoreService.getStoreBySlugPublic(input.slug);
+			return await StoreService.getStoreBySlugPublic(input.slug, {
+				productPage: input.productPage,
+				productLimit: input.productLimit,
+			});
 		}),
 };
