@@ -6,13 +6,14 @@ import {
 } from "@dukkani/common/schemas/store/input";
 import {
 	storeIncludeOutputSchema,
+	storeSafeOutputSchema,
 	storeSimpleOutputSchema,
 } from "@dukkani/common/schemas/store/output";
 import { StoreService } from "@dukkani/common/services";
 import { database } from "@dukkani/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { protectedProcedure } from "../index";
+import { protectedProcedure, publicProcedure } from "../index";
 
 export const storeRouter = {
 	/**
@@ -83,5 +84,23 @@ export const storeRouter = {
 			}
 
 			return await StoreService.getStoreBySlug(input.slug, userId);
+		}),
+
+	/**
+	 * Get store by slug (public - for storefronts)
+	 * No authentication required, but rate limited
+	 * @todo: Do we really need a rate limit for this?
+	 */
+	getBySlugPublic: publicProcedure
+		.input(z.object({ slug: z.string() }))
+		.output(storeSafeOutputSchema)
+		.handler(async ({ input }) => {
+			if (!input.slug) {
+				throw new ORPCError("BAD_REQUEST", {
+					message: "Store slug is required",
+				});
+			}
+
+			return await StoreService.getStoreBySlugPublic(input.slug);
 		}),
 };

@@ -1,27 +1,7 @@
-import {
-	DEFAULT_LOCALE,
-	LOCALES,
-	type Locale,
-} from "@dukkani/common/schemas/constants";
-import { match } from "@formatjs/intl-localematcher";
-import Negotiator from "negotiator";
+import { LOCALES } from "@dukkani/common/schemas/constants";
+import { getLocale, setLocaleCookie } from "@dukkani/common/utils/locale-proxy";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-
-function getLocale(request: NextRequest): string {
-	// Check cookie first (user preference)
-	const cookieLocale = request.cookies.get("locale")?.value;
-	if (cookieLocale && LOCALES.includes(cookieLocale as Locale)) {
-		return cookieLocale;
-	}
-
-	// Then check Accept-Language header
-	const acceptLanguage = request.headers.get("accept-language") ?? undefined;
-	const headers = { "accept-language": acceptLanguage };
-	const languages = new Negotiator({ headers }).languages();
-
-	return match(languages, LOCALES, DEFAULT_LOCALE);
-}
 
 export function proxy(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -46,10 +26,7 @@ export function proxy(request: NextRequest) {
 		// Update cookie if needed
 		const locale = pathname.split("/")[1];
 		const response = NextResponse.next();
-		response.cookies.set("locale", locale, {
-			maxAge: 60 * 60 * 24 * 365, // 1 year
-			path: "/",
-		});
+		setLocaleCookie(response, locale);
 		return response;
 	}
 
@@ -58,10 +35,7 @@ export function proxy(request: NextRequest) {
 	request.nextUrl.pathname = `/${locale}${pathname}`;
 
 	const response = NextResponse.redirect(request.nextUrl);
-	response.cookies.set("locale", locale, {
-		maxAge: 60 * 60 * 24 * 365,
-		path: "/",
-	});
+	setLocaleCookie(response, locale);
 
 	return response;
 }

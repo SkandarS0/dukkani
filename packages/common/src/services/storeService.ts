@@ -5,6 +5,7 @@ import { StoreQuery } from "../entities/store/query";
 import type { CreateStoreOnboardingInput } from "../schemas/store/input";
 import type {
 	StoreIncludeOutput,
+	StoreSafeOutput,
 	StoreSimpleOutput,
 } from "../schemas/store/output";
 import { getOrderLimitForPlan } from "../schemas/store-plan/constants";
@@ -139,5 +140,22 @@ export class StoreService {
 		}
 
 		return StoreEntity.getRo(store);
+	}
+
+	/**
+	 * Get store by slug (public - no ownership verification)
+	 * Used for public storefronts
+	 */
+	static async getStoreBySlugPublic(slug: string): Promise<StoreSafeOutput> {
+		const store = await database.store.findUnique({
+			where: { slug },
+			include: StoreQuery.getClientSafeInclude(),
+		});
+
+		if (!store) {
+			throw new Error("Store not found");
+		}
+
+		return StoreEntity.getSafeRo(store);
 	}
 }

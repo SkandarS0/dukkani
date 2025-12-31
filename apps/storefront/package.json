@@ -1,9 +1,9 @@
 {
-	"name": "@dukkani/dashboard",
+	"name": "@dukkani/storefront",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --port=3003",
+		"dev": "next dev --port=3004",
 		"build": "next build",
 		"start": "next start",
 		"clean": "rm -rf .next node_modules"
@@ -18,21 +18,15 @@
 		"@orpc/client": "catalog:",
 		"@orpc/tanstack-query": "catalog:",
 		"@prisma/client": "catalog:",
-		"@tanstack/react-form": "catalog:",
 		"@tanstack/react-query": "catalog:",
 		"babel-plugin-react-compiler": "catalog:",
 		"better-auth": "catalog:",
 		"next": "catalog:",
-		"@hookform/resolvers": "catalog:",
-		"react-hook-form": "catalog:",
 		"next-intl": "catalog:",
 		"react": "catalog:",
 		"react-dom": "catalog:",
-		"sonner": "catalog:",
-		"tw-animate-css": "catalog:",
-		"zod": "catalog:",
 		"@orpc/server": "catalog:",
-		"qrcode.react": "4.2.0"
+		"zod": "catalog:"
 	},
 	"devDependencies": {
 		"@dukkani/config": "workspace:*",
