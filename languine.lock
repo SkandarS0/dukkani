@@ -8,9 +8,22 @@ files:
     settings.telegram.linked: 7330094b095d2229d0774a58fa8000ff
     settings.telegram.recently: 9d37489d0dc3801455919cceb4b67e99
     settings.telegram.linkButton: 031129e8cba87236db403ef51daf40a1
+    settings.telegram.disconnectButton: d6cd2778f7c1d46c6c42be3a772581b4
+    settings.telegram.disconnectTitle: 2d644692ce2ec96d9258ef004556bc8a
+    settings.telegram.disconnectDescription: cf1b5deceb48d4d3c06450b1ff103eda
+    settings.telegram.disconnectPlaceholder: d842cb6e3229dc4b9423b55e33e1c0a8
+    settings.telegram.disconnectSuccess: 813b78563580988286533952a0d85598
+    settings.telegram.disconnectError: 16dfbef837506d34f5b14082104a655b
+    settings.telegram.disconnectNotLinked: cdd9f705350076b7cf3dbad16fe77ec1
+    settings.telegram.yourStores: f99753cf9361408363439104139a2320
+    settings.telegram.otpCode: 660242b9344c59777574a90d04ce857c
+    settings.telegram.storeNameLabel: e3fb0b5e9ce53fe70b119648fc217f44
+    settings.telegram.cancelButton: ea4788705e6873b424c65e91c2846b19
     settings.telegram.option1: a424c4291d39df53d295a594fd6d5d57
     settings.telegram.option2: 9d690bb39492bcd2a1bec5cf02001d19
     settings.telegram.expires: f96c8e9c58ac0fac6c7615e06415de36
+    settings.telegram.error: b028ccd04708b8c3c7722956e149a718
+    settings.telegram.storeNameRequired: 8e8ee004d00532ee457a426b1c53fa6a
     onboarding.storeSetup.title: 7d76d7f2be8081594740e40d3b11f693
     onboarding.storeSetup.subtitle: ac80e9b3d153136a47b1f64bf183eb83
     onboarding.storeSetup.storeName.label: e3fb0b5e9ce53fe70b119648fc217f44
