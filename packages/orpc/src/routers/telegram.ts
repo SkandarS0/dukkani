@@ -1,5 +1,8 @@
+import {
+	disconnectTelegramInputSchema,
+	sendOTPInputSchema,
+} from "@dukkani/common/schemas/telegram/input";
 import { StoreQuery } from "@dukkani/common/entities/store/query";
-import { sendOTPInputSchema } from "@dukkani/common/schemas/telegram/input";
 import {
 	type TelegramBotLinkOutput,
 	type TelegramStatusOutput,
@@ -12,6 +15,15 @@ import { TelegramService } from "@dukkani/common/services";
 import { database } from "@dukkani/db";
 import { ORPCError } from "@orpc/server";
 import { protectedProcedure } from "../index";
+import { createRateLimitMiddleware } from "../middleware/rate-limit";
+
+// Rate limiter for link/disconnect operations: 3 per hour
+const telegramLinkRateLimit = createRateLimitMiddleware({
+	custom: {
+		max: 3,
+		windowMs: 60 * 60 * 1000, // 1 hour
+	},
+});
 
 export const telegramRouter = {
 	/**
@@ -80,5 +92,32 @@ export const telegramRouter = {
 				userEmail: user?.email ?? null,
 				stores: user?.stores ?? [],
 			};
+		}),
+
+	/**
+	 * Disconnect Telegram account
+	 * Requires store name confirmation
+	 */
+	disconnect: protectedProcedure
+		.use(telegramLinkRateLimit)
+		.input(disconnectTelegramInputSchema)
+		.output(successOutputSchema)
+		.handler(async ({ input, context }): Promise<SuccessOutput> => {
+			const userId = context.session.user.id;
+
+			try {
+				await TelegramService.disconnectTelegramAccount(
+					userId,
+					input.storeName,
+				);
+				return { success: true };
+			} catch (error) {
+				throw new ORPCError("BAD_REQUEST", {
+					message:
+						error instanceof Error
+							? error.message
+							: "Failed to disconnect Telegram account",
+				});
+			}
 		}),
 };

@@ -395,6 +395,7 @@ ${itemsText}
 			link: TelegramService.handleLinkCommand,
 			start: TelegramService.handleStartCommand,
 			help: TelegramService.handleHelpCommand,
+			disconnect: TelegramService.handleDisconnectCommand,
 		};
 
 		const handler = commandMap[command.toLowerCase()];
@@ -683,6 +684,24 @@ ${itemsText}
 				}
 				return;
 			}
+
+			// Handle text messages (for disconnect confirmation)
+			if (update.message?.text) {
+				const chatId = update.message.chat.id.toString();
+				const text = update.message.text.trim();
+
+				// Check if user is waiting for disconnect confirmation
+				const confirmation =
+					await TelegramService.getDisconnectConfirmation(chatId);
+				if (confirmation) {
+					await TelegramService.handleDisconnectConfirmation(
+						text,
+						chatId,
+						confirmation.userId,
+					);
+					return;
+				}
+			}
 		} catch (error) {
 			if (update.message?.chat?.id) {
 				try {
@@ -701,5 +720,226 @@ ${itemsText}
 				console.error("Telegram webhook processing error:", error);
 			}
 		}
+	}
+
+	/**
+	 * Handle /disconnect command - Start disconnect flow
+	 */
+	private static async handleDisconnectCommand(
+		_args: string[],
+		chatId: string,
+	): Promise<void> {
+		// Find user by telegramChatId
+		const user = await database.user.findFirst({
+			where: { telegramChatId: chatId },
+			include: {
+				stores: {
+					select: { name: true },
+					orderBy: { createdAt: "desc" },
+				},
+			},
+		});
+
+		if (!user) {
+			await TelegramService.sendMessage(
+				chatId,
+				"❌ <b>Not Linked</b>\n\nYour Telegram account is not linked to any Dukkani account.",
+				{ parseMode: "HTML" },
+			);
+			return;
+		}
+
+		if (user.stores.length === 0) {
+			await TelegramService.sendMessage(
+				chatId,
+				"❌ <b>No Stores Found</b>\n\nYou don't have any stores to disconnect from.",
+				{ parseMode: "HTML" },
+			);
+			return;
+		}
+
+		// Show stores and ask for confirmation
+		const storeNames = user.stores.map((s) => s.name).join(", ");
+
+		// Store confirmation state in database (expires in 5 minutes)
+		await TelegramService.storeDisconnectConfirmation(
+			chatId,
+			user.id,
+			new Date(Date.now() + 5 * 60 * 1000),
+		);
+
+		await TelegramService.sendMessage(
+			chatId,
+			"⚠️ <b>Disconnect Telegram Account</b>\n\n" +
+				"To confirm disconnection, please type the name of one of your stores:\n\n" +
+				`<b>Your stores:</b> ${storeNames}\n\n` +
+				"Type the store name exactly as shown above to disconnect.\n" +
+				"This confirmation expires in 5 minutes.",
+			{ parseMode: "HTML" },
+		);
+	}
+
+	/**
+	 * Handle disconnect confirmation - Validate store name and disconnect
+	 */
+	private static async handleDisconnectConfirmation(
+		storeName: string,
+		chatId: string,
+		userId: string,
+	): Promise<void> {
+		// Clean up confirmation state
+		await TelegramService.deleteDisconnectConfirmation(chatId);
+
+		try {
+			// Use the shared disconnect logic
+			await TelegramService.disconnectTelegramAccount(userId, storeName);
+
+			await TelegramService.sendMessage(
+				chatId,
+				"✅ <b>Account Disconnected</b>\n\n" +
+					"Your Telegram account has been successfully disconnected from Dukkani. " +
+					"You will no longer receive order notifications.\n\n" +
+					"To link again, use /link CODE from your dashboard.",
+				{ parseMode: "HTML" },
+			);
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : "An error occurred";
+
+			// Handle specific error cases
+			if (errorMessage.includes("Store name doesn't match")) {
+				await TelegramService.sendMessage(
+					chatId,
+					"❌ <b>Invalid Store Name</b>\n\n" +
+						"The store name you entered doesn't match any of your stores. " +
+						"Please try again with /disconnect",
+					{ parseMode: "HTML" },
+				);
+			} else if (errorMessage.includes("not linked")) {
+				await TelegramService.sendMessage(
+					chatId,
+					"❌ <b>Not Linked</b>\n\n" +
+						"Your Telegram account is not linked to any Dukkani account.",
+					{ parseMode: "HTML" },
+				);
+			} else {
+				await TelegramService.sendMessage(
+					chatId,
+					"❌ <b>Disconnect Failed</b>\n\n" +
+						"An error occurred while disconnecting your account. Please try again later.",
+					{ parseMode: "HTML" },
+				);
+			}
+		}
+	}
+
+	/**
+	 * Store disconnect confirmation in database (replaces in-memory Map)
+	 * This ensures state is shared across serverless/multi-instance deployments
+	 */
+	private static async storeDisconnectConfirmation(
+		telegramChatId: string,
+		userId: string,
+		expiresAt: Date,
+	): Promise<void> {
+		// Delete any existing confirmation for this chat
+		await database.telegramDisconnectConfirmation.deleteMany({
+			where: { telegramChatId },
+		});
+
+		// Create new confirmation
+		await database.telegramDisconnectConfirmation.create({
+			data: {
+				telegramChatId,
+				userId,
+				expiresAt,
+			},
+		});
+	}
+
+	/**
+	 * Get disconnect confirmation from database
+	 */
+	private static async getDisconnectConfirmation(
+		telegramChatId: string,
+	): Promise<{ userId: string; expiresAt: Date } | null> {
+		const confirmation =
+			await database.telegramDisconnectConfirmation.findUnique({
+				where: { telegramChatId },
+			});
+
+		if (!confirmation) {
+			return null;
+		}
+
+		// Check if expired
+		if (confirmation.expiresAt < new Date()) {
+			// Clean up expired confirmation
+			await database.telegramDisconnectConfirmation.delete({
+				where: { id: confirmation.id },
+			});
+			return null;
+		}
+
+		return {
+			userId: confirmation.userId,
+			expiresAt: confirmation.expiresAt,
+		};
+	}
+
+	/**
+	 * Delete disconnect confirmation from database
+	 */
+	private static async deleteDisconnectConfirmation(
+		telegramChatId: string,
+	): Promise<void> {
+		await database.telegramDisconnectConfirmation.deleteMany({
+			where: { telegramChatId },
+		});
+	}
+
+	/**
+	 * Disconnect Telegram account for a user
+	 * Validates store ownership and Telegram link status before disconnecting
+	 *
+	 * @param userId - The user ID to disconnect
+	 * @param storeName - The name of one of the user's stores (for confirmation)
+	 * @throws Error if store name doesn't match or Telegram is not linked
+	 */
+	static async disconnectTelegramAccount(
+		userId: string,
+		storeName: string,
+	): Promise<void> {
+		// Verify user owns a store with this name
+		const store = await database.store.findFirst({
+			where: {
+				ownerId: userId,
+				name: storeName.trim(),
+			},
+			select: { id: true },
+		});
+
+		if (!store) {
+			throw new Error("Store name doesn't match any of your stores");
+		}
+
+		// Verify user has Telegram linked
+		const user = await database.user.findUnique({
+			where: { id: userId },
+			select: { telegramChatId: true },
+		});
+
+		if (!user?.telegramChatId) {
+			throw new Error("Telegram account is not linked");
+		}
+
+		// Disconnect Telegram account
+		await database.user.update({
+			where: { id: userId },
+			data: {
+				telegramChatId: null,
+				telegramLinkedAt: null,
+			},
+		});
 	}
 }
