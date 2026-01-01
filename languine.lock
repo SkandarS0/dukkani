@@ -22,10 +22,45 @@ files:
     onboarding.storeSetup.notifications.options.telegram.description: f2dbf67a0e38b31420f83f2d83fb37e7
     onboarding.storeSetup.notifications.options.both.label: 130c5b3473c57faa76e2a1c54e26f88e
     onboarding.storeSetup.notifications.options.both.description: a168a30f111bc99a4d19d73f8a43bf02
-    onboarding.storeSetup.submit: 223d7226693427e0983c422e4b359502
+    onboarding.storeSetup.submit: a0bfb8e59e6c13fc8d990781f77694fe
     onboarding.storeSetup.success: 881e8e2b145a0db16d3266973bbe0615
+    onboarding.storeConfiguration.title: 453d90f549ba2b0fb3705acd5e005728
+    onboarding.storeConfiguration.subtitle: 43a998374abbd308ffc241a811fa0706
+    onboarding.storeConfiguration.category.label: cfb37d623974c20c0ecb035912c1d9d1
+    onboarding.storeConfiguration.category.options.fashion.label: 93e002c712ad248bb0ade31909cef876
+    onboarding.storeConfiguration.category.options.fashion.description: 96b1b876bcdb8193b39a8f5d4e6b6f31
+    onboarding.storeConfiguration.category.options.electronics.label: ee3c6e8ed9c27c45f161ea416c997df8
+    onboarding.storeConfiguration.category.options.electronics.description: c18c15d9576d7ad9d2d02c4448f2ca72
+    onboarding.storeConfiguration.category.options.food.label: 0a38e7286ebbb560354992b3ce62be67
+    onboarding.storeConfiguration.category.options.food.description: 0924a06128a281b8545cfb34b68d8112
+    onboarding.storeConfiguration.category.options.home.label: 8cf04a9734132302f96da8e113e80ce5
+    onboarding.storeConfiguration.category.options.home.description: a22910ff650f398c6e9503f43c298e50
+    onboarding.storeConfiguration.category.options.beauty.label: 7a7f3a70f71ac2372ae60e431b8236bb
+    onboarding.storeConfiguration.category.options.beauty.description: ab00aca5cc0b1260338194768031156f
+    onboarding.storeConfiguration.category.options.sports.label: 918e180e06b96c76b7193c9fcb1cb312
+    onboarding.storeConfiguration.category.options.sports.description: 69ebba82a6656d13d65db171ff67bbe4
+    onboarding.storeConfiguration.category.options.books.label: 6225eb5bf8a031f750a1b03f810ccc6a
+    onboarding.storeConfiguration.category.options.books.description: 71832af71280798e8cfce4b23cd7ac9e
+    onboarding.storeConfiguration.category.options.toys.label: 66d0af2d5da0109dc2aae67829f7d4d4
+    onboarding.storeConfiguration.category.options.toys.description: dedac511b245f7e8aa1e4b63ad2d01a9
+    onboarding.storeConfiguration.category.options.other.label: 6311ae17c1ee52b36e68aaf4ad066387
+    onboarding.storeConfiguration.category.options.other.description: 0c70b13506d16c2b353d42b13c72ffc1
+    onboarding.storeConfiguration.theme.label: 329474a9c3e975d599cd00a3c36030f1
+    onboarding.storeConfiguration.theme.options.light.label: 9914a0ce04a7b7b6a8e39bec55064b82
+    onboarding.storeConfiguration.theme.options.light.description: af5a5f61f6d37f141e0518c434cfeb6f
+    onboarding.storeConfiguration.theme.options.dark.label: a18366b217ebf811ad1886e4f4f865b2
+    onboarding.storeConfiguration.theme.options.dark.description: 928a2d1d052a6ee11af80ec7cff6e691
+    onboarding.storeConfiguration.theme.options.minimal.label: 30fc6bbba82125243ecf4ddb27fee645
+    onboarding.storeConfiguration.theme.options.minimal.description: 9d910bbd57f51e87b7ac7976ae211a56
+    onboarding.storeConfiguration.theme.options.modern.label: ad1c9cd3e7b07e2c364c985f73188054
+    onboarding.storeConfiguration.theme.options.modern.description: c5a7623d4c137e797231cfba3dc5ddde
+    onboarding.storeConfiguration.theme.options.classic.label: d35b51b639528d580362ca7042de6a0e
+    onboarding.storeConfiguration.theme.options.classic.description: 4eac152faa912f3146080e0e88d9656a
+    onboarding.storeConfiguration.submit: 223d7226693427e0983c422e4b359502
+    onboarding.storeConfiguration.success: b351e532fe963aba69516fdf8bb28205
     onboarding.steps.signup: 08bd40c7543007ad06e4fce31618f6ec
     onboarding.steps.storeSetup: fdb0c388de01d545017cdf9ccf00eb72
+    onboarding.steps.storeConfiguration: f1206f9fadc5ce41694f69129aecac26
     onboarding.steps.complete: e7d31fc0602fb2ede144d18cdffd816b
     onboarding.signup.title: 5bef23eb7efff2736c5583bda59e5eb7
     onboarding.signup.subtitle: 582f7ea78ee567fabccea0f30a84c9a6
